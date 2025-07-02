@@ -1,5 +1,5 @@
 const express = require('express');
-const Competence = require('../models/competence');
+const Competence = require('../models/Competence');
 const { calculerStatutCompetence, calculerStatistiquesGlobales } = require('../utils/statusCalculator');
 
 const router = express.Router();
@@ -62,6 +62,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /competences - Créer une compétence
 router.post('/', async (req, res) => {
+  console.log('POST /api/competences called', req.body);
   try {
     const { code, nom, sousCompetences = [] } = req.body;
 
