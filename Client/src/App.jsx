@@ -143,6 +143,36 @@ const App = () => {
     }
   };
 
+  // Ajouter une sous-compétence à une compétence existante
+  const handleAddSousCompetence = async (competenceId, sousCompNom) => {
+    try {
+      const competence = competences.find(c => c._id === competenceId);
+      const newSousCompetences = [
+        ...competence.sousCompetences,
+        { nom: sousCompNom, validee: false }
+      ];
+      // Mise à jour optimiste
+      const updatedCompetences = competences.map(comp => {
+        if (comp._id === competenceId) {
+          return {
+            ...comp,
+            sousCompetences: newSousCompetences,
+            evaluation: calculateEvaluation(newSousCompetences)
+          };
+        }
+        return comp;
+      });
+      setCompetences(updatedCompetences);
+      setStats(calculateStats(updatedCompetences));
+      // Mise à jour sur le serveur
+      await competenceService.updateEvaluation(competenceId, newSousCompetences);
+      toast.success('Sous-compétence ajoutée !');
+    } catch (err) {
+      loadCompetences();
+      toast.error('Erreur lors de l\'ajout de la sous-compétence');
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner message="Chargement des compétences..." />;
   }
@@ -228,6 +258,7 @@ const App = () => {
                 competence={competence}
                 onToggleSousCompetence={handleToggleSousCompetence}
                 onDelete={handleDeleteCompetence}
+                onAddSousCompetence={handleAddSousCompetence}
               />
             ))
           )}

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Check, X, Trash2, MoreVertical } from 'lucide-react';
+import { Check, X, Trash2, MoreVertical, Plus } from 'lucide-react';
 
-const CompetenceCard = ({ competence, onToggleSousCompetence, onDelete }) => {
+const CompetenceCard = ({ competence, onToggleSousCompetence, onDelete, onAddSousCompetence }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [newSousComp, setNewSousComp] = useState('');
+  const [adding, setAdding] = useState(false);
   const { _id, code, nom, sousCompetences, evaluation } = competence;
   const isValidee = evaluation?.statut === 'validée';
 
@@ -11,6 +13,14 @@ const CompetenceCard = ({ competence, onToggleSousCompetence, onDelete }) => {
       onDelete(_id);
     }
     setShowMenu(false);
+  };
+
+  const handleAddSousCompetence = async () => {
+    if (!newSousComp.trim()) return;
+    setAdding(true);
+    await onAddSousCompetence(_id, newSousComp.trim());
+    setNewSousComp('');
+    setAdding(false);
   };
 
   return (
@@ -110,6 +120,25 @@ const CompetenceCard = ({ competence, onToggleSousCompetence, onDelete }) => {
               </div>
             </div>
           ))}
+        </div>
+        {/* Ajout de sous-compétence */}
+        <div className="mt-4 flex items-center space-x-2">
+          <input
+            type="text"
+            value={newSousComp}
+            onChange={e => setNewSousComp(e.target.value)}
+            placeholder="Ajouter une sous-compétence..."
+            className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            disabled={adding}
+          />
+          <button
+            type="button"
+            onClick={handleAddSousCompetence}
+            className="btn-primary flex items-center px-3 py-2"
+            disabled={adding || !newSousComp.trim()}
+          >
+            <Plus className="h-4 w-4 mr-1" /> Ajouter
+          </button>
         </div>
       </div>
       
