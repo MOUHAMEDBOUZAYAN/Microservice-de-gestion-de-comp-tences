@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2 } from 'lucide-react';
+import { X, Plus, Trash2, BookOpen, Code, Edit3 } from 'lucide-react';
 
 const CompetenceForm = ({ isOpen, onClose, onSubmit, loading = false }) => {
   const [formData, setFormData] = useState({
@@ -83,127 +83,139 @@ const CompetenceForm = ({ isOpen, onClose, onSubmit, loading = false }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900">Nouvelle Compétence</h2>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Code */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center space-x-2">
+          <Code className="h-4 w-4 text-blue-500" />
+          <span>Code de la compétence *</span>
+        </label>
+        <input
+          type="text"
+          value={formData.code}
+          onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value.toUpperCase() }))}
+          placeholder="Ex: C1, C2, C3..."
+          className={`input-field ${
+            errors.code ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : ''
+          }`}
+        />
+        {errors.code && (
+          <p className="text-red-500 text-sm mt-2 flex items-center space-x-1">
+            <X className="h-3 w-3" />
+            <span>{errors.code}</span>
+          </p>
+        )}
+      </div>
+
+      {/* Nom */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center space-x-2">
+          <BookOpen className="h-4 w-4 text-blue-500" />
+          <span>Nom de la compétence *</span>
+        </label>
+        <input
+          type="text"
+          value={formData.nom}
+          onChange={(e) => setFormData(prev => ({ ...prev, nom: e.target.value }))}
+          placeholder="Ex: Développement Frontend"
+          className={`input-field ${
+            errors.nom ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : ''
+          }`}
+        />
+        {errors.nom && (
+          <p className="text-red-500 text-sm mt-2 flex items-center space-x-1">
+            <X className="h-3 w-3" />
+            <span>{errors.nom}</span>
+          </p>
+        )}
+      </div>
+
+      {/* Sous-compétences */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-semibold text-gray-700 flex items-center space-x-2">
+            <Edit3 className="h-4 w-4 text-blue-500" />
+            <span>Sous-compétences *</span>
+          </label>
           <button
-            onClick={() => {
-              onClose();
-              resetForm();
-            }}
-            className="text-gray-400 hover:text-gray-600"
+            type="button"
+            onClick={addSousCompetence}
+            className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors duration-200"
           >
-            <X className="h-6 w-6" />
+            <Plus className="h-4 w-4 mr-2" />
+            Ajouter
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6">
-          {/* Code */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Code de la compétence *
-            </label>
-            <input
-              type="text"
-              value={formData.code}
-              onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value.toUpperCase() }))}
-              placeholder="Ex: C1, C2, C3..."
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.code ? 'border-red-500' : 'border-gray-300'
-              }`}
-            />
-            {errors.code && <p className="text-red-500 text-sm mt-1">{errors.code}</p>}
-          </div>
-
-          {/* Nom */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nom de la compétence *
-            </label>
-            <input
-              type="text"
-              value={formData.nom}
-              onChange={(e) => setFormData(prev => ({ ...prev, nom: e.target.value }))}
-              placeholder="Ex: Développement Frontend"
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.nom ? 'border-red-500' : 'border-gray-300'
-              }`}
-            />
-            {errors.nom && <p className="text-red-500 text-sm mt-1">{errors.nom}</p>}
-          </div>
-
-          {/* Sous-compétences */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Sous-compétences *
-              </label>
-              <button
-                type="button"
-                onClick={addSousCompetence}
-                className="flex items-center text-blue-500 hover:text-blue-600 text-sm"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                Ajouter
-              </button>
+        <div className="space-y-4">
+          {formData.sousCompetences.map((sousComp, index) => (
+            <div key={index} className="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={sousComp.nom}
+                  onChange={(e) => updateSousCompetence(index, e.target.value)}
+                  placeholder={`Sous-compétence ${index + 1}`}
+                  className={`input-field bg-white ${
+                    errors[`sousComp_${index}`] ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : ''
+                  }`}
+                />
+                {errors[`sousComp_${index}`] && (
+                  <p className="text-red-500 text-sm mt-2 flex items-center space-x-1">
+                    <X className="h-3 w-3" />
+                    <span>{errors[`sousComp_${index}`]}</span>
+                  </p>
+                )}
+              </div>
+              {formData.sousCompetences.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeSousCompetence(index)}
+                  className="btn-danger p-3 flex items-center justify-center"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
             </div>
-
-            <div className="space-y-3">
-              {formData.sousCompetences.map((sousComp, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={sousComp.nom}
-                    onChange={(e) => updateSousCompetence(index, e.target.value)}
-                    placeholder={`Sous-compétence ${index + 1}`}
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      errors[`sousComp_${index}`] ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                  />
-                  {formData.sousCompetences.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeSousCompetence(index)}
-                      className="text-red-500 hover:text-red-600 p-2"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-            {errors.sousCompetences && (
-              <p className="text-red-500 text-sm mt-1">{errors.sousCompetences}</p>
-            )}
-          </div>
-
-          {/* Buttons */}
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                resetForm();
-              }}
-              className="btn-secondary flex-1"
-              disabled={loading}
-            >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              className="btn-primary flex-1"
-              disabled={loading}
-            >
-              {loading ? 'Création...' : 'Créer la compétence'}
-            </button>
-          </div>
-        </form>
+          ))}
+        </div>
+        {errors.sousCompetences && (
+          <p className="text-red-500 text-sm mt-2 flex items-center space-x-1">
+            <X className="h-3 w-3" />
+            <span>{errors.sousCompetences}</span>
+          </p>
+        )}
       </div>
-    </div>
+
+      {/* Buttons */}
+      <div className="flex space-x-4 pt-4">
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            resetForm();
+          }}
+          className="btn-secondary flex-1 py-3"
+          disabled={loading}
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          className="btn-primary flex-1 py-3"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="loading-spinner h-4 w-4"></div>
+              <span>Création...</span>
+            </div>
+          ) : (
+            'Créer la compétence'
+          )}
+        </button>
+      </div>
+    </form>
   );
 };
 

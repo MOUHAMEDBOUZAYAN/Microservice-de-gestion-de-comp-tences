@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, BarChart3, User, BookOpen, Check } from 'lucide-react';
+import { Plus, BarChart3, User, BookOpen, Check, X } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -178,88 +178,123 @@ const App = () => {
   }
 
   return (
-    <div className=" min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <header className= "bg-white shadow-sm border-b ">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+      <header className="header-gradient sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <BookOpen className="h-8 w-8 text-blue-500" />
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
+                <BookOpen className="h-8 w-8 text-white" />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Gestion des Compétences</h1>
-                <p className="text-sm text-gray-600">404.js - Suivi des formations</p>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  Gestion des Compétences
+                </h1>
+                <p className="text-sm text-gray-600 mt-1">404.js - Suivi des formations</p>
               </div>
             </div>
             <button
               onClick={() => setShowForm(true)}
-              className="btn-primary flex items-center space-x-2"
+              className="btn-primary flex items-center space-x-3 animate-fade-in-up"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-5 w-5" />
               <span>Nouvelle compétence</span>
             </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Message d'erreur */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            <p>{error}</p>
-            <button 
-              onClick={loadCompetences}
-              className="mt-2 text-sm underline hover:no-underline"
-            >
-              Réessayer
-            </button>
+          <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-8 animate-fade-in-up">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-red-100 rounded-full">
+                <X className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <p className="font-medium">{error}</p>
+                <button 
+                  onClick={loadCompetences}
+                  className="mt-2 text-sm underline hover:no-underline font-medium"
+                >
+                  Réessayer
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Statistiques */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              icon={<BarChart3 className="h-6 w-6" />}
-              title="Compétences totales"
-              value={stats.totalCompetences}
-              color="blue"
-            />
-            <StatCard
-              icon={<Check className="h-6 w-6" />}
-              title="Compétences validées"
-              value={stats.competencesValidees}
-              color="green"
-            />
-            <StatCard
-              icon={<User className="h-6 w-6" />}
-              title="Sous-compétences"
-              value={stats.totalSousCompetences}
-              color="purple"
-            />
-            <StatCard
-              icon={<BookOpen className="h-6 w-6" />}
-              title="Validées"
-              value={stats.sousCompetencesValidees}
-              color="orange"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <StatCard
+                icon={<BarChart3 className="h-7 w-7" />}
+                title="Compétences totales"
+                value={stats.totalCompetences}
+                color="blue"
+              />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <StatCard
+                icon={<Check className="h-7 w-7" />}
+                title="Compétences validées"
+                value={stats.competencesValidees}
+                color="green"
+              />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <StatCard
+                icon={<User className="h-7 w-7" />}
+                title="Sous-compétences"
+                value={stats.totalSousCompetences}
+                color="purple"
+              />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <StatCard
+                icon={<BookOpen className="h-7 w-7" />}
+                title="Validées"
+                value={stats.sousCompetencesValidees}
+                color="orange"
+              />
+            </div>
           </div>
         )}
 
         {/* Liste des compétences */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {competences.length === 0 ? (
-            <div className="text-center text-gray-500 py-12">
-              <p>Aucune compétence trouvée.</p>
+            <div className="text-center py-16 animate-fade-in-up">
+              <div className="p-8 bg-white/60 backdrop-blur-sm rounded-3xl shadow-lg border border-white/20">
+                <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">Aucune compétence trouvée</h3>
+                <p className="text-gray-500 mb-6">Commencez par ajouter votre première compétence</p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="btn-primary"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Ajouter une compétence
+                </button>
+              </div>
             </div>
           ) : (
-            competences.map((competence) => (
-              <CompetenceCard
+            competences.map((competence, index) => (
+              <div 
                 key={competence._id}
-                competence={competence}
-                onToggleSousCompetence={handleToggleSousCompetence}
-                onDelete={handleDeleteCompetence}
-                onAddSousCompetence={handleAddSousCompetence}
-              />
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${0.1 * index}s` }}
+              >
+                <CompetenceCard
+                  competence={competence}
+                  onToggleSousCompetence={handleToggleSousCompetence}
+                  onDelete={handleDeleteCompetence}
+                  onAddSousCompetence={handleAddSousCompetence}
+                />
+              </div>
             ))
           )}
         </div>
@@ -267,16 +302,21 @@ const App = () => {
 
       {/* Modal du formulaire de création */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
+        <div className="modal-overlay" onClick={() => !formLoading && setShowForm(false)}>
+          <div className="modal-content animate-slide-in-right" onClick={(e) => e.stopPropagation()}>
             <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
               onClick={() => setShowForm(false)}
               disabled={formLoading}
             >
-              <span className="text-xl">&times;</span>
+              <X className="h-6 w-6" />
             </button>
-            <h2 className="text-xl font-bold mb-4">Nouvelle compétence</h2>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                Nouvelle compétence
+              </h2>
+              <p className="text-gray-600 mt-2">Ajoutez une nouvelle compétence à votre portfolio</p>
+            </div>
             <CompetenceForm
               isOpen={true}
               onClose={() => setShowForm(false)}
@@ -286,7 +326,18 @@ const App = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
